@@ -58,13 +58,14 @@ buildNGrams <- function(myCorpus, prefix, tokenizer){
 # }
 
 ngramTokenizer <- function(x,y=2){
-  options(warn = -1)
+  #options(warn = -1)
   #theNgrams <- NLP::ngrams(x,n= y)
-  sentences <- qdap::sent_detect_nlp(as.character(x))
-  theNgrams <- qdap::ngrams(sentences,n= y)
+  #sentences <- qdap::sent_detect_nlp(as.character(x))
+  #theNgrams <- qdap::ngrams(sentences,n= y)
+  theNgrams <- qdap::ngrams(x,n= y)
   theNgrams <- theNgrams$all_n[[paste("n_", y, sep="")]]
   theNgrams <- lapply(theNgrams, paste, collapse=" ")
-  options(warn = 0)
+  #options(warn = 0)
   unlist(theNgrams)
 }
 
