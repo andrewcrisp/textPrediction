@@ -1,0 +1,107 @@
+---
+title: "Text Prediction Milestone Report"
+author: "Andrew Crisp"
+date: "8/26/2016"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Intent
+
+As the culmination of the Data Science Specialization at Coursera, I will be using provided data to create a sample application.  The application will take user input and present the likely next word in the phrase.  
+
+Because of the size of the dataset, processing times are noticibly longer than any project done so far in the specialization.  Anecdotally, building the unigram, bigram, and trigrams that will be used took about 22 hours.  At it's peak, the script was occupying 60GB of memory. 
+
+## The Data
+```{r}
+setwd("~/projects/capstone")
+dataDir <- "rawData/final/en_US"
+blogsFile <- "en_US.blogs.txt"
+newsFile <- "en_US.news.txt"
+twitterFile <- "en_US.twitter.txt"
+
+blogs <- readLines(paste(dataDir, blogsFile, sep="/"))
+blogsSummary <- summary(blogs)
+
+news <- readLines(paste(dataDir, newsFile, sep="/"))
+newsSummary <- summary(news)
+
+twitter <- readLines(paste(dataDir, twitterFile, sep="/"))
+twitterSummary <- summary(twitter)
+```
+
+Coursera has provided the initial dataset.  This is a 548MB zip file containing blog, news, and twitter text in four languages.  For the duration of the project, I will be using the en_US files:
+
+ - en_US.blogs.txt @ 200MB
+ - en_US.news.txt @ 196MB
+ - en_US.twitter.txt @ 159MB
+ 
+The directory structure is ~/projects/capstone/rawdata/final/en_US.  
+
+The twitter file, while being smallest, has the largest number of lines at `r twitterSummary[1]`.
+Blogs has `r blogsSummary[1]`.
+News has `r newsSummary[1]`.
+
+```{r}
+twitterCounts <- lapply(twitter, FUN=function(x) {
+  count <- nchar(x)
+  count
+})
+twitterLength <- length(twitterCounts)
+twitterBiggest <- sort(as.numeric(twitterCounts))[twitterLength]
+
+newsCounts <- lapply(news, FUN=function(x) {
+  count <- nchar(x)
+  count
+})
+newsLength <- length(newsCounts)
+newsBiggest <- sort(as.numeric(newsCounts))[newsLength]
+
+blogsCounts <- lapply(blogs, FUN=function(x) {
+  count <- nchar(x)
+  count
+})
+blogsCounts <- sort(unlist(blogsCounts), decreasing = TRUE)
+blogsLength <- length(blogsCounts)
+blogsBiggest <- blogsCounts[1]
+
+```
+
+The largest individual line belongs to the Blogs at `r blogsBiggest` characters.  But, the dropoff in length is rapid.  Within the first ten highest counts, the length loses an order of magnitude:
+`r (sort(unlist(blogsCounts), decreasing = TRUE)[1:10])`
+
+This can be shown graphically as well:
+
+```{r echo=FALSE}
+hist(blogsCounts, xlim = c(0,1000), breaks = 1000, main = "Length of Blog Entries")
+```
+
+## The Application
+
+Successful completion of the goal will be demonstrated with a shiny application.  It should take user input, evaluate against the collected knowledge in the corpus, and present a prediction of the following word.  
+At its most simple, the algorithm will:
+
+1. Await user input
+2. Receive user input
+3. Match the provided input against a lookup table or Markov Chain
+4. Retun the most common next step of the Markov Chain or statistically likely lookup table result
+5. Await further user input
+
+## Progress
+
+Problems yet to be solved include:
+
+1. Data sanitization
+ + Is removal of profanity called for?
+ + Numbers and punctuation are prevalent in the data sets.
+2. Missing ngrams
+ + A user could provide an intial or intermediate input that is not in the corpus.
+3. Performance
+ + In its current iteration, the files I have prepared are too large to host and load on the shinyapps.io service.  Some optimization is necessary.
+ 
+
+ 
+ 
