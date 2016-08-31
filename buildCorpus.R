@@ -13,7 +13,7 @@ replaceWWWs <- function (x){
   gsub("www\\S+", "website", x)
 }
 
-myCorpus <- VCorpus(DirSource(dataDir), readerControl = list(
+myCorpus <- VCorpus(DirSource(rawDataDir), readerControl = list(
   reader=readPlain, 
   language="en_US" 
   #load=TRUE
@@ -26,7 +26,7 @@ funs <- list(stripWhitespace,
 myCorpus <- tm_map(myCorpus, content_transformer(removeHashtags))
 myCorpus <- tm_map(myCorpus, content_transformer(replaceWWWs))
 myCorpus <- tm_map(myCorpus, FUN=tm_reduce, tmFuns=funs)
-#myCorpus <- tm_map(myCorpus, content_transformer(removeUnicode))
+myCorpus <- tm_map(myCorpus, content_transformer(removeUnicode))
 #myCorpus <- tm_map(myCorpus, tm::stripWhitespace)
 #myCorpus <- tm_map(myCorpus, removeWords, myStopwords)
 
