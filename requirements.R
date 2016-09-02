@@ -1,7 +1,9 @@
+options(java.parameters = "-Xmx180g")
+
 require(tm)
 #require(rJava)
 require(NLP)
-#require(openNLP)
+require(openNLP)
 #require(RWeka)
 require(qdap)
 
@@ -9,7 +11,6 @@ rawDataDir <- "rawData/final/en_US"
 dataDir <- "data"
 corpusFile <- paste(dataDir,"/myCorpus.rds",sep="")
 scrubbedCorpusFile <- paste(dataDir, "scrubbedCorpus.rd", sep="/")
-
 
 blogsFile <- paste(rawDataDir,"en_US.blogs.txt",sep="/")
 newsFile <- paste(rawDataDir,"en_US.news.txt",sep="/")

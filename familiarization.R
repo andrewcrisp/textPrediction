@@ -1,58 +1,61 @@
-require(tm)
-require(rJava)
-require(NLP)
-require(openNLP)
-require(RWeka)
-require(qdap)
-
 setwd("~/projects/capstone")
+source("requirements.R")
 
-dataDir <- "rawData/final/en_US"
-blogsFile <- "en_US.blogs.txt"
-newsFile <- "en_US.news.txt"
-twitterFile <- "en_US.twitter.txt"
+data("crude")
 
-wordAnnotator <- Maxent_Word_Token_Annotator()
-sentenceAnnotator <- Maxent_Sent_Token_Annotator()
+myCorpus <- crude
 
-love <- 0
-hate <- 0
-biggestCount <- 0
+reshape_corpus <- function(current.corpus, FUN, ...) {
+  # Extract the text from each document in the corpus and put into a list
+  text <- lapply(current.corpus, content)
+  
+  # Basically convert the text
+  docs <- lapply(text, FUN, ...)
+  docs <- as.vector(unlist(docs))
+  
+  # Create a new corpus structure and return it
+  new.corpus <- Corpus(VectorSource(docs))
+  return(new.corpus)
+}
 
-blogs <- readLines(paste(dataDir, blogsFile, sep="/"))
-news <- readLines(paste(dataDir, newsFile, sep="/"))
-twitter <- readLines(paste(dataDir, twitterFile, sep="/"))
+convert_text_to_sentences <- function(text, lang = "en") {
+  # Function to compute sentence annotations using the Apache OpenNLP Maxent sentence detector employing the default model for language 'en'. 
+  sentence_token_annotator <- Maxent_Sent_Token_Annotator(language = lang)
+  
+  # Convert text to class String from package NLP
+  text <- as.String(text)
+  
+  # Sentence boundaries in text
+  sentence.boundaries <- annotate(text, sentence_token_annotator)
+  
+  # Extract sentences
+  sentences <- text[sentence.boundaries]
+  
+  # return sentences
+  return(sentences)
+}
 
-twitterCounts <- lapply(twitter, FUN=function(x) {
-  count <- nchar(x)
-  count
-})
-twitterLength <- length(twitterCounts)
-twitterBiggest <- sort(as.numeric(twitterCounts))[twitterLength]
+removeHashtags <- function (x){
+  gsub("#\\S+", "", x)
+}
 
-newsCounts <- lapply(news, FUN=function(x) {
-  count <- nchar(x)
-  count
-})
-newsLength <- length(newsCounts)
-newsBiggest <- sort(as.numeric(newsCounts))[newsLength]
+removeUnicode <- function (x){
+  gsub("([^a-z\\s])", "", x, perl = TRUE)
+}
 
-blogsCounts <- lapply(blogs, FUN=function(x) {
-  count <- nchar(x)
-  count
-})
-blogsLength <- length(blogsCounts)
-blogsBiggest <- sort(as.numeric(blogsCounts))[blogsLength]
+replaceWWWs <- function (x){
+  gsub("www\\S+", "website", x)
+}
 
-twitterBiggest
-newsBiggest
-blogsBiggest
+myCorpus <- reshape_corpus(myCorpus, convert_text_to_sentences)
 
-loves <- lapply(twitter, function (x){ grepl("love", x)})
-hates <- lapply(twitter, function (x){ grepl("hate", x)})
-love <- sum(loves==TRUE)
-hate <- sum(hates==TRUE)
-love/hate
+funs <- list(stripWhitespace,
+             removePunctuation,
+             removeNumbers,
+             content_transformer(tolower))
+myCorpus <- tm_map(myCorpus, content_transformer(removeHashtags))
+myCorpus <- tm_map(myCorpus, content_transformer(replaceWWWs))
+myCorpus <- tm_map(myCorpus, content_transformer(removeUnicode))
+myCorpus <- tm_map(myCorpus, FUN=tm_reduce, tmFuns=funs)
 
-kickboxers <- lapply(twitter, function(x){grepl("A computer once beat me at chess, but it was no match for me at kickboxing", x)})
-sum(kickboxers==TRUE)
+
