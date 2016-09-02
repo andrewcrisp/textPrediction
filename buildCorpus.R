@@ -19,14 +19,15 @@ myCorpus <- VCorpus(DirSource(rawDataDir), readerControl = list(
   #load=TRUE
 ))
 
-funs <- list(stripWhitespace,
-             removePunctuation,
-             removeNumbers,
-             content_transformer(tolower))
-myCorpus <- tm_map(myCorpus, content_transformer(removeHashtags))
-myCorpus <- tm_map(myCorpus, content_transformer(replaceWWWs))
+#funs <- list(stripWhitespace,
+#             removePunctuation,
+#             removeNumbers,
+#             content_transformer(tolower))
+funs <- list(stripWhitespace)
+#myCorpus <- tm_map(myCorpus, content_transformer(removeHashtags))
+#myCorpus <- tm_map(myCorpus, content_transformer(replaceWWWs))
 myCorpus <- tm_map(myCorpus, FUN=tm_reduce, tmFuns=funs)
-myCorpus <- tm_map(myCorpus, content_transformer(removeUnicode))
+#myCorpus <- tm_map(myCorpus, content_transformer(removeUnicode))
 #myCorpus <- tm_map(myCorpus, tm::stripWhitespace)
 #myCorpus <- tm_map(myCorpus, removeWords, myStopwords)
 

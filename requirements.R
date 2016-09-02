@@ -6,7 +6,11 @@ require(NLP)
 require(openNLP)
 #require(RWeka)
 require(qdap)
+require(parallel)
 
+cores <- detectCores()-1
+#cluster <- makeCluster(cores)
+#stopCluster(cluster)
 rawDataDir <- "rawData/final/en_US"
 dataDir <- "data"
 corpusFile <- paste(dataDir,"/myCorpus.rds",sep="")
