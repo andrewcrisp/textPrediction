@@ -34,27 +34,27 @@ findTermFrequency <- function(x){
 }
 
 ngramTokenizer <- function(x,y=2){
-  #options(warn = -1)
-  theNgrams <- NLP::ngrams(words(x),n= y)
-  theNgrams <- lapply(theNgrams, paste, collapse=" ")
-  #options(warn = 0)
-  unlist(theNgrams, use.names=FALSE)
+#options(warn = -1)
+theNgrams <- NLP::ngrams(words(x),n= y)
+theNgrams <- lapply(theNgrams, paste, collapse=" ")
+#options(warn = 0)
+unlist(theNgrams, use.names=FALSE)
 }
 
 unigramTokenizer <- function(x, y=1){
-  ngramTokenizer(x,y)
+ngramTokenizer(x,y)
 }
 bigramTokenizer <- function(x, y=2){
-  ngramTokenizer(x,y)
+ngramTokenizer(x,y)
 }
 trigramTokenizer <- function(x, y=3){
-  ngramTokenizer(x,y)
+ngramTokenizer(x,y)
 }
 quadgramTokenizer <- function(x, y=4){
-  ngramTokenizer(x,y)
+ngramTokenizer(x,y)
 }
 pentagramTokenizer <- function(x, y=5){
-  ngramTokenizer(x,y)
+ngramTokenizer(x,y)
 }
 
 

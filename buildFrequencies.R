@@ -17,7 +17,8 @@ buildFrequencies <- function(prefix){
   tdmFile <- paste(dataDir,"/",prefix,"gramTDM.rds",sep = "")
   frequencyFile <- paste(dataDir,"/",prefix,"gramFrequency.rds",sep = "")
   myTDM <- readRDS(tdmFile)
-  myFrequency <- findTermFrequencies(myTDM)
+  myFrequency <- slam::row_sums(myTDM)
+  #myFrequency <- findTermFrequencies(myTDM)
   saveRDS(myFrequency, frequencyFile)
 }
 
