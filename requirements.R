@@ -1,4 +1,4 @@
-options(java.parameters = "-Xmx180g")
+#options(java.parameters = "-Xmx40g")
 
 require(tm)
 #require(rJava)
@@ -13,9 +13,11 @@ cores <- detectCores()-1
 #stopCluster(cluster)
 rawDataDir <- "rawData/final/en_US"
 dataDir <- "data"
-corpusFile <- paste(dataDir,"/myCorpus.rds",sep="")
-scrubbedCorpusFile <- paste(dataDir, "scrubbedCorpus.rd", sep="/")
+fallbackDataDir <- "fallbackDataDir"
 
+corpusFile <- paste(dataDir,"/myCorpus.rds",sep="")
+scrubbedCorpusFile <- paste(dataDir, "scrubbedCorpus.rds", sep="/")
+fallbackCorpusFile <- paste(fallbackDataDir, "fallbackCorpus.rds", sep="/")
 blogsFile <- paste(rawDataDir,"en_US.blogs.txt",sep="/")
 newsFile <- paste(rawDataDir,"en_US.news.txt",sep="/")
 twitterFile <- paste(rawDataDir,"en_US.twitter.txt",sep="/")

@@ -2,54 +2,68 @@ setwd("~/projects/capstone")
 source("requirements.R")
 
 buildNGrams <- function(myCorpus, prefix, tokenizer){
-      tdmFile <- paste(dataDir,"/",prefix,"gramTDM.rds",sep = "")
+  tdmFile <- paste(dataDir,"/",prefix,"gramTDM.rds",sep = "")
   frequencyFile <- paste(dataDir,"/",prefix,"gramFrequency.rds",sep = "")
-    myTDM <- TermDocumentMatrix(myCorpus, control = list(tokenize = tokenizer))
-    saveRDS(myTDM, tdmFile)
-      myFrequency <- findTermFrequency(myTDM)
-      saveRDS(myFrequency, frequencyFile)
-        rm(myTDM)
-        rm(myFrequency)
+  myTDM <- TermDocumentMatrix(myCorpus, control = list(tokenize = tokenizer))
+  saveRDS(myTDM, tdmFile)
+  myFrequency <- findTermFrequencies(myTDM)
+  saveRDS(myFrequency, frequencyFile)
+  rm(myTDM)
+  rm(myFrequency)
+  gc()
+}
+
+buildFrequencies <- function(prefix){
+  tdmFile <- paste(dataDir,"/",prefix,"gramTDM.rds",sep = "")
+  frequencyFile <- paste(dataDir,"/",prefix,"gramFrequency.rds",sep = "")
+  myTDM <- readRDS(tdmFile)
+  myFrequency <- findTermFrequencies(myTDM)
+  saveRDS(myFrequency, frequencyFile)
 }
 
 ngramTokenizer <- function(x,y=2){
-      #options(warn = -1)
-      theNgrams <- NLP::ngrams(words(x),n= y)
-  #sentences <- qdap::sent_detect_nlp(as.character(x))
-  #theNgrams <- qdap::ngrams(sentences,n= y)
-  #theNgrams <- qdap::ngrams(x,n= y)
-  #theNgrams <- theNgrams$all_n[[paste("n_", y, sep="")]]
+  #options(warn = -1)
+  theNgrams <- NLP::ngrams(words(x),n= y)
   theNgrams <- lapply(theNgrams, paste, collapse=" ")
-    #options(warn = 0)
-    unlist(theNgrams, use.names=FALSE)
+  #options(warn = 0)
+  unlist(theNgrams, use.names=FALSE)
 }
 
 unigramTokenizer <- function(x, y=1){
-      ngramTokenizer(x,y)
+  ngramTokenizer(x,y)
 }
 bigramTokenizer <- function(x, y=2){
-      ngramTokenizer(x,y)
+  ngramTokenizer(x,y)
 }
 trigramTokenizer <- function(x, y=3){
-      ngramTokenizer(x,y)
+  ngramTokenizer(x,y)
 }
 quadgramTokenizer <- function(x, y=4){
-      ngramTokenizer(x,y)
+  ngramTokenizer(x,y)
 }
 pentagramTokenizer <- function(x, y=5){
-      ngramTokenizer(x,y)
+  ngramTokenizer(x,y)
 }
 
-findTermFrequency <- function(x){
-      capture.output(
-                         {
-                                   temp<-inspect(x)
-                               freqs <- data.frame(Term=rownames(temp), Freq=rowSums(temp))
-                                   }, file="/dev/null")
+findTermFrequencies <- function(tdm){
+  myTerms <- Terms(tdm)
+  freqs <- data.frame(Term = myTerms, Freq = NA, row.names = myTerms)
+  for (i in 1:length(myTerms)){
+    freqs[myTerms[i]] <- findTermFrequency(tdm,myTerms[i])
+  }
   freqs
 }
+findTermFrequency <- function(tdm, term){
+  capture.output(
+    {
+      temp <- tdm[term,]
+      temp <- as.matrix(temp)
+      freq <- rowSums(temp)
+    }, file="/dev/null")
+  freq
+}
 
-myCorpus <- readRDS(scrubbedCorpusFile)
+#myCorpus <- readRDS(scrubbedCorpusFile)
 # 
 # tokenizer <- unigramTokenizer
 # uniTDM <- TermDocumentMatrix(myCorpus, control = list(tokenize = tokenizer))
@@ -71,9 +85,15 @@ myCorpus <- readRDS(scrubbedCorpusFile)
 # pentaTDM <- TermDocumentMatrix(myCorpus, control = list(tokenize = tokenizer))
 # pentaFrequency <- findTermFrequency(pentaTDM)
 
-buildNGrams(myCorpus = myCorpus, prefix = "uni", tokenizer = unigramTokenizer)
-buildNGrams(myCorpus = myCorpus, prefix = "bi", tokenizer = bigramTokenizer)
-buildNGrams(myCorpus = myCorpus, prefix = "tri", tokenizer = trigramTokenizer)
-buildNGrams(myCorpus = myCorpus, prefix = "quad", tokenizer = quadgramTokenizer)
-buildNGrams(myCorpus = myCorpus, prefix = "penta", tokenizer = pentagramTokenizer)
+#buildNGrams(myCorpus = myCorpus, prefix = "uni", tokenizer = unigramTokenizer)
+#buildNGrams(myCorpus = myCorpus, prefix = "bi", tokenizer = bigramTokenizer)
+#buildNGrams(myCorpus = myCorpus, prefix = "tri", tokenizer = trigramTokenizer)
+#buildNGrams(myCorpus = myCorpus, prefix = "quad", tokenizer = quadgramTokenizer)
+#buildNGrams(myCorpus = myCorpus, prefix = "penta", tokenizer = pentagramTokenizer)
 
+
+buildFrequencies("uni")
+buildFrequencies("bi")
+buildFrequencies("tri")
+buildFrequencies("quad")
+buildFrequencies("penta")
