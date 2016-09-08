@@ -49,7 +49,7 @@ processTextFile <- function(filename){
   text <- as.vector(unlist(text))
 }
 
-scrubbedTextLinesFileConnection <- file(scrubbedTextLinesFile, "w")
+scrubbedTextLinesFileConnection <- file(scrubbedTextLinesFile, "w+")
 
 cluster<- parallel::makeCluster(cores)
 

@@ -63,6 +63,30 @@ findTermFrequency <- function(tdm, term){
   freq
 }
 
+stripSparseEntries <- function (frequencyTable, percentageToRetain=1){
+  if (percentageToRetain < 0){
+    return(frequencyTable)
+  }
+  if (percentageToRetain >= 1){
+    return(frequencyTable)
+  }
+  
+  totalCount <- sum(frequencyTable$Freq)
+  countToRetain <- totalCount * (percentageToRetain)
+  countToRemove <- totalCount - countToRetain
+  
+  currentCount <- totalCount
+  i <- 1
+  while(currentCount > countToRetain){
+    frequencyTable  <- frequencyTable[frequencyTable$Freq >i,]  
+    currentCount <- sum(frequencyTable$Freq)
+    i <- i + 1
+  }
+  frequencyTable<-droplevels(frequencyTable)
+  frequencyTable
+  
+}
+
 myCorpus <- readRDS(scrubbedCorpusFile)
 
 buildNGrams(myCorpus = myCorpus, prefix = "uni", tokenizer = unigramTokenizer)
@@ -70,6 +94,25 @@ buildNGrams(myCorpus = myCorpus, prefix = "bi", tokenizer = bigramTokenizer)
 buildNGrams(myCorpus = myCorpus, prefix = "tri", tokenizer = trigramTokenizer)
 buildNGrams(myCorpus = myCorpus, prefix = "quad", tokenizer = quadgramTokenizer)
 buildNGrams(myCorpus = myCorpus, prefix = "penta", tokenizer = pentagramTokenizer)
+
+
+unigramFrequency <- readRDS(unigramFrequencyFile)
+bigramFrequency <- readRDS(bigramFrequencyFile)
+trigramFrequency <- readRDS(trigramFrequencyFile)
+quadgramFrequency <- readRDS(quadgramFrequencyFile)
+pentagramFrequency <- readRDS(pentagramFrequencyFile)
+
+newUnis <- stripSparseEntries(unigramFrequency, .95)
+newBis <- stripSparseEntries(bigramFrequency, .70)
+newTris <- stripSparseEntries(trigramFrequency, .50)
+newQuads <- stripSparseEntries(quadgramFrequency, .15)
+newPentas <- stripSparseEntries(pentagramFrequency, .50)
+
+saveRDS(newUnis, unigramModelFile)
+saveRDS(newBis, bigramModelFile)
+saveRDS(newTris, trigramModelFile)
+saveRDS(newQuads, quadgramModelFile)
+saveRDS(newPentas, pentagramModelFile)
 
 #buildFrequencies("uni")
 #buildFrequencies("bi")
