@@ -1,5 +1,7 @@
 setwd("~/projects/capstone")
 source("requirements.R")
+require(parallel)
+cores <- parallel::detectCores()-1
 
 convert_text_to_sentences <- function(text, lang = "en") {
   # Function to compute sentence annotations using the Apache OpenNLP Maxent sentence detector employing the default model for language 'en'. 
@@ -36,20 +38,20 @@ replaceWWWs <- function (x){
 
 processTextFile <- function(filename){
   text <- readLines(filename, skipNul = TRUE)
-  text <- parLapply(cluster,text, convert_text_to_sentences)
+  text <- parallel::parLapply(cluster,text, convert_text_to_sentences)
   
-  text <- parLapply(cluster,text, tolower)
-  text <- parLapply(cluster,text, removeHashtags)
-  text <- parLapply(cluster,text, removeUnicode)
-  text <- parLapply(cluster,text, replaceWWWs)
-  text <- parLapply(cluster,text, removeNumbers)
+  text <- parallel::parLapply(cluster,text, tolower)
+  text <- parallel::parLapply(cluster,text, removeHashtags)
+  text <- parallel::parLapply(cluster,text, removeUnicode)
+  text <- parallel::parLapply(cluster,text, replaceWWWs)
+  text <- parallel::parLapply(cluster,text, removeNumbers)
   
   text <- as.vector(unlist(text))
 }
 
 scrubbedTextLinesFileConnection <- file(scrubbedTextLinesFile, "w")
 
-cluster<-makeCluster(cores)
+cluster<- parallel::makeCluster(cores)
 
 twitter <- processTextFile(twitterFile)
 writeLines(twitter, scrubbedTextLinesFileConnection)

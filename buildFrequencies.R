@@ -4,7 +4,7 @@ source("requirements.R")
 buildNGrams <- function(myCorpus, prefix, tokenizer){
   tdmFile <- paste(dataDir,"/",prefix,"gramTDM.rds",sep = "")
   frequencyFile <- paste(dataDir,"/",prefix,"gramFrequency.rds",sep = "")
-  myTDM <- TermDocumentMatrix(myCorpus, control = list(tokenize = tokenizer))
+  myTDM <- tm::TermDocumentMatrix(myCorpus, control = list(tokenize = tokenizer))
   saveRDS(myTDM, tdmFile)
   myFrequency <- findTermFrequencies(myTDM)
   saveRDS(myFrequency, frequencyFile)
@@ -18,8 +18,10 @@ buildFrequencies <- function(prefix){
   frequencyFile <- paste(dataDir,"/",prefix,"gramFrequency.rds",sep = "")
   myTDM <- readRDS(tdmFile)
   myFrequency <- slam::row_sums(myTDM)
-  #myFrequency <- findTermFrequencies(myTDM)
+  myFrequency <- data.frame(Term=names(myFrequency), Freq=myFrequency)
   saveRDS(myFrequency, frequencyFile)
+  rm(myFrequency)
+  gc()
 }
 
 ngramTokenizer <- function(x,y=2){
@@ -47,12 +49,9 @@ pentagramTokenizer <- function(x, y=5){
 }
 
 findTermFrequencies <- function(tdm){
-  myTerms <- Terms(tdm)
-  freqs <- data.frame(Term = myTerms, Freq = NA, row.names = myTerms)
-  for (i in 1:length(myTerms)){
-    freqs[myTerms[i]] <- findTermFrequency(tdm,myTerms[i])
-  }
-  freqs
+  myFrequency <- slam::row_sums(myTDM)
+  myFrequency <- data.frame(Term=names(myFrequency), Freq=myFrequency)
+  myFrequency
 }
 findTermFrequency <- function(tdm, term){
   capture.output(
@@ -64,37 +63,16 @@ findTermFrequency <- function(tdm, term){
   freq
 }
 
-#myCorpus <- readRDS(scrubbedCorpusFile)
-# 
-# tokenizer <- unigramTokenizer
-# uniTDM <- TermDocumentMatrix(myCorpus, control = list(tokenize = tokenizer))
-# uniFrequency <- findTermFrequency(uniTDM)
-# 
-# tokenizer <- bigramTokenizer
-# biTDM <- TermDocumentMatrix(myCorpus, control = list(tokenize = tokenizer))
-# biFrequency <- findTermFrequency(biTDM)
-# 
-# tokenizer <- trigramTokenizer
-# triTDM <- TermDocumentMatrix(myCorpus, control = list(tokenize = tokenizer))
-# triFrequency <- findTermFrequency(triTDM)
-# 
-# tokenizer <- quadgramTokenizer
-# quadTDM <- TermDocumentMatrix(myCorpus, control = list(tokenize = tokenizer))
-# quadFrequency <- findTermFrequency(quadTDM)
-# 
-# tokenizer <- pentagramTokenizer
-# pentaTDM <- TermDocumentMatrix(myCorpus, control = list(tokenize = tokenizer))
-# pentaFrequency <- findTermFrequency(pentaTDM)
+myCorpus <- readRDS(scrubbedCorpusFile)
 
-#buildNGrams(myCorpus = myCorpus, prefix = "uni", tokenizer = unigramTokenizer)
-#buildNGrams(myCorpus = myCorpus, prefix = "bi", tokenizer = bigramTokenizer)
-#buildNGrams(myCorpus = myCorpus, prefix = "tri", tokenizer = trigramTokenizer)
-#buildNGrams(myCorpus = myCorpus, prefix = "quad", tokenizer = quadgramTokenizer)
-#buildNGrams(myCorpus = myCorpus, prefix = "penta", tokenizer = pentagramTokenizer)
+buildNGrams(myCorpus = myCorpus, prefix = "uni", tokenizer = unigramTokenizer)
+buildNGrams(myCorpus = myCorpus, prefix = "bi", tokenizer = bigramTokenizer)
+buildNGrams(myCorpus = myCorpus, prefix = "tri", tokenizer = trigramTokenizer)
+buildNGrams(myCorpus = myCorpus, prefix = "quad", tokenizer = quadgramTokenizer)
+buildNGrams(myCorpus = myCorpus, prefix = "penta", tokenizer = pentagramTokenizer)
 
-
-buildFrequencies("uni")
-buildFrequencies("bi")
-buildFrequencies("tri")
-buildFrequencies("quad")
-buildFrequencies("penta")
+#buildFrequencies("uni")
+#buildFrequencies("bi")
+#buildFrequencies("tri")
+#buildFrequencies("quad")
+#buildFrequencies("penta")

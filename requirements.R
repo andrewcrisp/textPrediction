@@ -5,12 +5,11 @@ require(tm)
 require(NLP)
 require(openNLP)
 #require(RWeka)
-require(qdap)
-require(parallel)
+#require(qdap)
 
-cores <- detectCores()-1
-#cluster <- makeCluster(cores)
-#stopCluster(cluster)
+require(slam)
+
+
 rawDataDir <- "rawData/final/en_US"
 dataDir <- "data"
 fallbackDataDir <- "fallbackDataDir"

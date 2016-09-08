@@ -1,3 +1,5 @@
+setwd("~/projects/capstone")
+
 require(tm)
 #require(rJava)
 #require(NLP)
@@ -14,6 +16,7 @@ lookupTerm <- function (searchTerm, frequencyTable){
   searchTerm <- tolower(searchTerm)
   #searchTerm <- strsplit(searchTerm, " ")[[1]]
   regexTerm <- paste("(^",searchTerm,")($|\\s)",sep="")
+  #resultTable <- frequencyTable[grepl(regexTerm, frequencyTable)]
   resultTable <- frequencyTable[grepl(regexTerm,frequencyTable$Term),]
   resultTable[order(resultTable$Freq),]
   
@@ -33,7 +36,6 @@ stripUnicode <- function (frequencyTable){
   temp
 }
 
-setwd("~/projects/capstone")
 
 unigramTDMFile <- "unigramTDM.rds"
 unigramFrequencyFile <- "unigramFrequency.rds"
@@ -42,9 +44,15 @@ bigramFrequencyFile <- "bigramFrequency.rds"
 trigramTDMFile <- "trigramTDM.rds"
 trigramFrequencyFile <- "trigramFrequency.rds"
 
+quadgramFrequencyFile <- "quadgramFrequency.rds"
+pentagramFrequencyFile <- "pentagramFrequency.rds"
+
 unigramFrequency <- readRDS(unigramFrequencyFile)
 bigramFrequency <- readRDS(bigramFrequencyFile)
 trigramFrequency <- readRDS(trigramFrequencyFile)
+quadgramFrequency <- readRDS(quadgramFrequencyFile)
+pentagramFrequency <- readRDS(pentagramFrequencyFile)
+
 
 strippedUnigramFrequency <- stripSparseEntries(unigramFrequency,3)
 strippedBiGramFrequency <- stripSparseEntries(bigramFrequency, 3)
