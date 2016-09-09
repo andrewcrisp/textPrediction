@@ -15,22 +15,32 @@ q10 <- "I like how the same people are in almost all of Adam Sandler's"
 
 
 answersQ1 <- lookupTerm(q1)
-# 
+#
+# die/eat/give/sleep - no answers show up in the results
 answersQ2 <- lookupTerm(q2)
-# 
+#
+# financial/horticultural/marital/spiritual - no answers show up in the results
 answersQ3 <- lookupTerm(q3)
-# 
+#W morning = 11850 in bis
+# decade/month/weekend/morning -
 answersQ4 <- lookupTerm(q4)
-# stress - 5 in quads
+#C stress - 5 in quads
 answersQ5 <- lookupTerm(q5)
-# 
+#W look - 246 in quads, 1429 in tris
+#C picture - 212 in quads, 507 in tris
+# picture/walk/minute/look
 answersQ6 <- lookupTerm(q6)
-# 
+#W case - 19 quads, 21 tris
+#C matter - 5 quads, 7 tries
+# account/matter/incident/case
 answersQ7 <- lookupTerm(q7)
-# 
+#
+# finger/toe/hand/arm - no answers show up in the results
 answersQ8 <- lookupTerm(q8)
-# top  - 10 in pentagram
+#C top  - 10 in pentagram
 answersQ9 <- lookupTerm(q9)
 # 
+# weekly/daily/inside/outside - no answers show up in the results
 answersQ10 <- lookupTerm(q10)
 # 
+# movies/pictures/novels/stories - ZERO RETURNED RESULTS

@@ -7,8 +7,8 @@ lookupTerm <- function (searchTerm){
   searchTerm <- removeNumbers(searchTerm)
   
   theNgrams <- strsplit(searchTerm, " ")[[1]]
-  if(length(theNgrams)>4){
-    theNgrams <- theNgrams[(length(theNgrams)-3):length(theNgrams)]
+  if(length(theNgrams)>3){
+    theNgrams <- theNgrams[(length(theNgrams)-2):length(theNgrams)]
     searchTerm <- paste(theNgrams, collapse=" ")
   }
   regexTerm <- paste("(^",searchTerm,")($|\\s)",sep="")
@@ -16,8 +16,8 @@ lookupTerm <- function (searchTerm){
     length(theNgrams),
     bigramFrequency,
     trigramFrequency,
-    quadgramFrequency,
-    pentagramFrequency
+    quadgramFrequency
+    #pentagramFrequency
   )
   resultTable <- frequencyTable[grepl(regexTerm,frequencyTable$Term),]
   resultTable <- resultTable[order(resultTable$Freq, decreasing = TRUE),]
@@ -52,4 +52,4 @@ unigramFrequency <- readRDS(unigramModelFile)
 bigramFrequency <- readRDS(bigramModelFile)
 trigramFrequency <- readRDS(trigramModelFile)
 quadgramFrequency <- readRDS(quadgramModelFile)
-pentagramFrequency <- readRDS(pentagramModelFile)
+#pentagramFrequency <- readRDS(pentagramModelFile)
