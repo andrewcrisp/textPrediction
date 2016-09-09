@@ -51,7 +51,7 @@ processTextFile <- function(filename){
 
 scrubbedTextLinesFileConnection <- file(scrubbedTextLinesFile, "w+")
 
-cluster<- parallel::makeCluster(cores)
+cluster<- parallel::makeCluster(round(cores/2))
 
 twitter <- processTextFile(twitterFile)
 writeLines(twitter, scrubbedTextLinesFileConnection)

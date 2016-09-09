@@ -1,15 +1,43 @@
 setwd("~/projects/capstone")
 source("requirements.R")
 
-lookupTerm <- function (searchTerm, frequencyTable){
+lookupTerm <- function (searchTerm){
   searchTerm <- tolower(searchTerm)
-  #searchTerm <- strsplit(searchTerm, " ")[[1]]
+  searchTerm <- removePunctuation(searchTerm)
+  searchTerm <- removeNumbers(searchTerm)
+  
+  theNgrams <- strsplit(searchTerm, " ")[[1]]
+  if(length(theNgrams)>4){
+    theNgrams <- theNgrams[(length(theNgrams)-3):length(theNgrams)]
+    searchTerm <- paste(theNgrams, collapse=" ")
+  }
   regexTerm <- paste("(^",searchTerm,")($|\\s)",sep="")
-  #resultTable <- frequencyTable[grepl(regexTerm, frequencyTable)]
+  frequencyTable <- switch(
+    length(theNgrams),
+    bigramFrequency,
+    trigramFrequency,
+    quadgramFrequency,
+    pentagramFrequency
+  )
   resultTable <- frequencyTable[grepl(regexTerm,frequencyTable$Term),]
-  resultTable[order(resultTable$Freq),]
+  resultTable <- resultTable[order(resultTable$Freq, decreasing = TRUE),]
+  resultTable <- head(resultTable, 5)
+  if(length(theNgrams)>1){
+    resultTable <- rbind(resultTable, lookupTerm(shrinkSearchTerm(searchTerm)))
+  }
+  
+  #resultTable <- frequencyTable[grepl(regexTerm,frequencyTable$Term),]
+  
   
   resultTable
+}
+
+shrinkSearchTerm <- function(searchTerm){
+  theNgrams <- strsplit(searchTerm, " ")[[1]]
+  if(length(theNgrams) <=1 ){ return("")}
+  theNgrams <- theNgrams[2:length(theNgrams)]
+  searchTerm <- paste(theNgrams, collapse=" ")
+  searchTerm
 }
 
 buildSearchTerm <- function (phrase,n){

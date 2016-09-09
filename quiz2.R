@@ -69,20 +69,6 @@ q10 <- "If this isn't the cutest thing you've ever seen, then you must be"
 lookupTerm(buildSearchTerm(q1,4),pentagramFrequency)
 # beer
 lookupTerm(buildSearchTerm(q2,4),pentagramFrequency)
-lookupTerm(buildSearchTerm(q3,4),pentagramFrequency)
-lookupTerm(buildSearchTerm(q4,4),pentagramFrequency)
-lookupTerm(buildSearchTerm(q5,4),pentagramFrequency)
-lookupTerm(buildSearchTerm(q6,4),pentagramFrequency)
-lookupTerm(buildSearchTerm(q7,4),pentagramFrequency)
-lookupTerm(buildSearchTerm(q8,4),pentagramFrequency)
-lookupTerm(buildSearchTerm(q9,4),pentagramFrequency)
-lookupTerm(buildSearchTerm(q10,4),pentagramFrequency)
-
-
-
-lookupTerm(buildSearchTerm(q1,4),pentagramFrequency)
-# beer
-lookupTerm(buildSearchTerm(q2,4),pentagramFrequency)
 # world - 187
 lookupTerm(buildSearchTerm(q3,4),pentagramFrequency)
 # happiest - 2
