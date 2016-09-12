@@ -49,7 +49,7 @@ pentagramTokenizer <- function(x, y=5){
 }
 
 findTermFrequencies <- function(tdm){
-  myFrequency <- slam::row_sums(myTDM)
+  myFrequency <- slam::row_sums(tdm)
   myFrequency <- data.frame(Term=names(myFrequency), Freq=myFrequency)
   myFrequency
 }
