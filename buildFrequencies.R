@@ -24,6 +24,19 @@ buildFrequencies <- function(prefix){
   gc()
 }
 
+hasTripleRepeatingCharacter <- function(term){
+  grepl("(.)\\1\\1", term, perl = TRUE)
+}
+
+#hasRepeatingWord <- function(term){
+#  grepl("\\b(\\w+) +\\1\\b +\\1\\b", term, perl=TRUE)
+#}
+
+
+hasRepeatingWord <- function(term){
+  grepl("\\b(\\w+) +\\1\\b", term, perl=TRUE)
+}
+
 ngramTokenizer <- function(x,y=2){
   #options(warn = -1)
   theNgrams <- NLP::ngrams(words(x),n= y)
@@ -63,6 +76,18 @@ findTermFrequency <- function(tdm, term){
   freq
 }
 
+stripRepeatingLetters <- function(frequencyTable){
+  frequencyTable <- frequencyTable[!hasTripleRepeatingCharacter(frequencyTable$Term),]
+  frequencyTable <- droplevels(frequencyTable)
+  frequencyTable
+}
+
+stripRepeatingWords <- function(frequencyTable){
+  frequencyTable <- frequencyTable[!hasRepeatingWord(frequencyTable$Term),]
+  frequencyTable <- droplevels(frequencyTable)
+  frequencyTable
+}
+
 stripSparseEntries <- function (frequencyTable, percentageToRetain=1){
   if (percentageToRetain < 0){
     return(frequencyTable)
@@ -95,18 +120,29 @@ buildNGrams(myCorpus = myCorpus, prefix = "tri", tokenizer = trigramTokenizer)
 buildNGrams(myCorpus = myCorpus, prefix = "quad", tokenizer = quadgramTokenizer)
 buildNGrams(myCorpus = myCorpus, prefix = "penta", tokenizer = pentagramTokenizer)
 
-
 unigramFrequency <- readRDS(unigramFrequencyFile)
 bigramFrequency <- readRDS(bigramFrequencyFile)
 trigramFrequency <- readRDS(trigramFrequencyFile)
 quadgramFrequency <- readRDS(quadgramFrequencyFile)
 #pentagramFrequency <- readRDS(pentagramFrequencyFile)
 
-newUnis <- stripSparseEntries(unigramFrequency, .95)
-newBis <- stripSparseEntries(bigramFrequency, .70)
-newTris <- stripSparseEntries(trigramFrequency, .50)
-newQuads <- stripSparseEntries(quadgramFrequency, .50)
-#newPentas <- stripSparseEntries(pentagramFrequency, .50)
+newUnis <- stripRepeatingWords(unigramFrequency)
+newBis <- stripRepeatingWords(bigramFrequency)
+newTris <- stripRepeatingWords(trigramFrequency)
+newQuads <- stripRepeatingWords(quadgramFrequency)
+#newPentas <- stripRepeatingWords(pentagramFrequency)
+
+newUnis <- stripRepeatingLetters(newUnis)
+newBis <- stripRepeatingLetters(newBis)
+newTris <- stripRepeatingLetters(newTris)
+newQuads <- stripRepeatingLetters(newQuads)
+#newPentas <- stripRepeatingWords(newPentas)
+
+newUnis <- stripSparseEntries(newUnis, .95)
+newBis <- stripSparseEntries(newBis, .70)
+newTris <- stripSparseEntries(newTris, .50)
+newQuads <- stripSparseEntries(newQuads, .25)
+#newPentas <- stripSparseEntries(newPentas, .50)
 
 #sizes <- c(object.size(newUnis), object.size(newBis), object.size(newTris), object.size(newQuads))
 #sizes <- sizes/(1024*1024)

@@ -15,12 +15,18 @@ q10 <- "I like how the same people are in almost all of Adam Sandler's"
 
 
 answersQ1 <- lookupTerm(q1)
-#
+#W 'give' - 9 hits in trigrams, 283 in bis
+#C 'die' - 59 in bis
+# 'eat' - 36 in bis
 # die/eat/give/sleep - no answers show up in the results
 answersQ2 <- lookupTerm(q2)
-#
+#W 'financial' - 68 in bis
+#Q 'spiritual' - 32 in bis
 # financial/horticultural/marital/spiritual - no answers show up in the results
 answersQ3 <- lookupTerm(q3)
+# 'month' - 4821 bis
+#C 'weekend' - 10537 in bis
+# 'decade' - 106 in bis
 #W morning = 11850 in bis
 # decade/month/weekend/morning -
 answersQ4 <- lookupTerm(q4)
@@ -34,13 +40,15 @@ answersQ6 <- lookupTerm(q6)
 #C matter - 5 quads, 7 tries
 # account/matter/incident/case
 answersQ7 <- lookupTerm(q7)
-#
+#C 'hand' - 21 in tris
 # finger/toe/hand/arm - no answers show up in the results
 answersQ8 <- lookupTerm(q8)
 #C top  - 10 in pentagram
 answersQ9 <- lookupTerm(q9)
-# 
+#C 'outside' - 62 in bis
 # weekly/daily/inside/outside - no answers show up in the results
 answersQ10 <- lookupTerm(q10)
-# 
+#C Movies - just guessed... can't think of a way to do the prediction
 # movies/pictures/novels/stories - ZERO RETURNED RESULTS
+#mySizes <-sort(sapply(ls(),function(x){object.size(get(x))}))
+# sum(round(mySizes/(1024*1024)))

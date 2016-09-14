@@ -11,15 +11,23 @@ lookupTerm <- function (searchTerm){
     theNgrams <- theNgrams[(length(theNgrams)-2):length(theNgrams)]
     searchTerm <- paste(theNgrams, collapse=" ")
   }
+  regexTerm <- paste("(",searchTerm," )",sep="")
+  ngramCount <- length(theNgrams)
+  while(ngramCount < 3){
+    regexTerm <- paste("(\\w+ )", regexTerm, sep="")
+    ngramCount = ngramCount + 1
+  }
+  # regexTerm <- paste("(^)", regexTerm, sep="")
   regexTerm <- paste("(^",searchTerm,")($|\\s)",sep="")
   frequencyTable <- switch(
-    length(theNgrams),
-    bigramFrequency,
-    trigramFrequency,
-    quadgramFrequency
-    #pentagramFrequency
+   length(theNgrams),
+   bigramFrequency,
+   trigramFrequency,
+   quadgramFrequency
+   #pentagramFrequency
   )
-  resultTable <- frequencyTable[grepl(regexTerm,frequencyTable$Term),]
+  #resultTable <- droplevels(frequencyTable[grepl(regexTerm,frequencyTable$Term),])
+  resultTable <- data.frame(frequencyTable[grepl(regexTerm,frequencyTable$Term),], stringsAsFactors = FALSE)
   resultTable <- resultTable[order(resultTable$Freq, decreasing = TRUE),]
   resultTable <- head(resultTable, 5)
   if(length(theNgrams)>1){
@@ -29,6 +37,7 @@ lookupTerm <- function (searchTerm){
   #resultTable <- frequencyTable[grepl(regexTerm,frequencyTable$Term),]
   
   
+  #resultTable <- droplevels(resultTable)
   resultTable
 }
 
