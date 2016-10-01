@@ -1,24 +1,18 @@
-#
-# This is the server logic of a Shiny web application. You can run the 
-# application by clicking 'Run App' above.
-#
-# Find out more about building applications with Shiny here:
-# 
-#    http://shiny.rstudio.com/
-#
-
 library(shiny)
+source("lookupModel.R")
 
-# Define server logic required to draw a histogram
 shinyServer(function(input, output) {
+  options(DT.options = list(pageLength = 12, dom='t', order = list(list(3,'desc'))))
+  
   output$searchTerm <- renderText(input$searchTerm)
-
+  
+  output$searchTermLabel <- renderText(paste("Your search term: ", input$searchTerm))
+  
   output$textPrediction <- DT::renderDataTable({
      if(input$searchTerm != ""){
        resultTable <- lookupTerm(as.character(input$searchTerm))
+       output$mostLikelyLabel <- renderText(paste("Most likely phrase: ", predictMostLikely(resultsTable = resultTable)))
        resultTable
      }
    })
-  source("lookupModel.R")
-   
 })

@@ -39,6 +39,9 @@ trigramModelFile <- paste(dataDir, "trigramModel.rds", sep="/")
 quadgramModelFile <- paste(dataDir, "quadgramModel.rds", sep="/")
 pentagramModelFile <- paste(dataDir, "pentagramModel.rds", sep="/")
 
+aToLQuadgramModelFile <- paste(dataDir, "aToLQuadgramModel.RDS", sep="/")
+mToZQuadgramModelFile <- paste(dataDir, "mToZQuadgramModel.RDS", sep="/")
+
 #blogs <- readLines(paste(dataDir, blogsFile, sep="/"))
 #news <- readLines(paste(dataDir, newsFile, sep="/"))
 #twitter <- readLines(paste(dataDir, twitterFile, sep="/"))
